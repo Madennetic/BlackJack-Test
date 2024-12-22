@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <random>
+#include <ctime>
 
 int handValue = 0;
 
@@ -9,13 +11,13 @@ int FindAceValue() {
     return value;
 };
 
-struct Card {
+struct card {
     std::string cardName;
     std::string cardType;
     int cardValue;
 };
 
-std::vector<Card> cards = {
+std::vector<card> cards = {
 {"King of Spades", "King",10},
 {"King of Diamonds", "King",10},
 {"King of Clubs", "King",10},
@@ -69,13 +71,32 @@ std::vector<Card> cards = {
 {"Ace of Clubs", "Ace", FindAceValue()},
 {"Ace of Spades", "Ace", FindAceValue()},
 };
-// TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-int main() {
-    return 0;
+
+card GetCard() {
+    return cards[rand() % cards.size()]; //NOLINT
 }
 
-// TIP See CLion help at <a
-// href="https://www.jetbrains.com/help/clion/">jetbrains.com/help/clion/</a>.
-//  Also, you can try interactive lessons for CLion by selecting
-//  'Help | Learn IDE Features' from the main menu.
+std::vector<card> hand;
+
+void PrintHand() {
+    for (const card& i : hand) {
+        std::cout << i.cardName << ", ";
+    }
+}
+
+void DrawCard() {
+    hand.push_back(GetCard());
+}
+
+int main() {
+
+    srand(time(nullptr)); //NOLINT
+
+    for (int i = 0; i < 5; i++) {
+        DrawCard();
+    }
+
+    PrintHand();
+
+    return 0;
+}

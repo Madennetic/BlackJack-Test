@@ -5,17 +5,21 @@
 
 void mainMenu() {
     std::cout << "Welcome to the Casino!\n\n"
-    << "We're currently just opening up so there is only one game available:\n Black Jack!"
-    << "\n\nEnter any key to continue\n";
+    << "We're currently just opening up so there is only one game available:\nBlack Jack!"
+    << "\n\nEnter to continue\n";
     std::cin.get();
 }
 
 int handValue = 0;
 
+int aceSwitch = 0; //Will track if aces have been changed to 1
+
 int FindAceValue() {
-    int value = 11;
-    value = (handValue > 21) ? value = 1 : value = 11;
-    return value;
+    if (aceSwitch == 0) {
+        aceSwitch = 1;
+        return 1;
+    }
+    return 11; //Somewhat redundant line (because you will bust anyway), but need it for return
 };
 
 struct card {

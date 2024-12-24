@@ -3,6 +3,13 @@
 #include <random>
 #include <ctime>
 
+void mainMenu() {
+    std::cout << "Welcome to the Casino!\n\n"
+    << "We're currently just opening up so there is only one game available:\n Black Jack!"
+    << "\n\nEnter any key to continue\n";
+    std::cin.get();
+}
+
 int handValue = 0;
 
 int FindAceValue() {
@@ -89,6 +96,8 @@ void DrawCard() {
 }
 
 int main() {
+
+    mainMenu();
 
     srand(time(nullptr)); //NOLINT
 

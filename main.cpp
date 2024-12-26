@@ -98,7 +98,7 @@ std::vector<card> hand; //Need to make this a local variable
 
 void PrintHand() {
     for (const card& i : hand) {
-        std::cout << "| " << i.cardName << " |";
+        std::cout << "| " << i.cardName << " |"; //want to intersperse cards with commas
     }
     std::cout << std::endl;
 }

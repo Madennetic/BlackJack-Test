@@ -1,4 +1,5 @@
 #include <iostream>
+#include <utility>
 #include <vector>
 #include <random>
 #include <ctime>
@@ -83,8 +84,10 @@ std::vector<card> cards = {
 {"Ace of Spades", "Ace", FindAceValue()},
 };
 
-card GetCard() {
-    return cards[rand() % cards.size()]; //NOLINT
+card GetCard(std::vector<card> currentDeck) {
+    card currentCard = cards[rand() % cards.size()];
+    currentDeck.erase(find(currentDeck.begin(), currentDeck.end(), currentCard));
+    return currentCard; //NOLINT
 }
 
 std::vector<card> hand;
@@ -95,21 +98,27 @@ void PrintHand() {
     }
 }
 
-void DrawCard() {
-    hand.push_back(GetCard());
+void DrawCard(std::vector<card> currentDeck) {
+    hand.push_back(GetCard(currentDeck));
+    // hand.push_back(GetCard(std::move(currentDeck))); ?????
 }
 
 int main() {
 
-    mainMenu();
+    while (true) { // This will change into functions and only one while loop in here
+        mainMenu();
+        std::vector<card> deck = cards;
+        while (true) {
 
-    srand(time(nullptr)); //NOLINT
+            srand(time(nullptr)); //NOLINT
 
-    for (int i = 0; i < 5; i++) {
-        DrawCard();
+            for (int i = 0; i < 5; i++) {
+                DrawCard(deck);
+            }
+
+            PrintHand();
+
+            return 0;
+        }
     }
-
-    PrintHand();
-
-    return 0;
 }

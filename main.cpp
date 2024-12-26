@@ -1,8 +1,8 @@
 #include <iostream>
-#include <utility>
 #include <vector>
 #include <random>
 #include <ctime>
+#include <algorithm>
 
 void mainMenu() {
     std::cout << "Welcome to the Casino!\n\n"
@@ -27,6 +27,10 @@ struct card {
     std::string cardName;
     std::string cardType;
     int cardValue;
+
+    bool operator==(const card& other) const {
+        return (cardName == other.cardName && cardValue == other.cardValue);
+    }
 };
 
 std::vector<card> cards = {
@@ -84,9 +88,10 @@ std::vector<card> cards = {
 {"Ace of Spades", "Ace", FindAceValue()},
 };
 
-card GetCard(std::vector<card> currentDeck) {
-    card currentCard = cards[rand() % cards.size()];
+card GetCard(std::vector<card> &currentDeck) {
+    card currentCard = currentDeck[rand() % cards.size()];
     currentDeck.erase(find(currentDeck.begin(), currentDeck.end(), currentCard));
+    std::cout << currentDeck.size();
     return currentCard; //NOLINT
 }
 
@@ -98,7 +103,7 @@ void PrintHand() {
     }
 }
 
-void DrawCard(std::vector<card> currentDeck) {
+void DrawCard(std::vector<card> &currentDeck) {
     hand.push_back(GetCard(currentDeck));
     // hand.push_back(GetCard(std::move(currentDeck))); ?????
 }
@@ -116,9 +121,9 @@ int main() {
                 DrawCard(deck);
             }
 
-            PrintHand();
-
-            return 0;
+            std::cout << deck.size();
+            std::cin.get();
         }
     }
+    return 0;
 }

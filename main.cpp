@@ -28,12 +28,12 @@ struct card {
     std::string cardType;
     int cardValue;
 
-    bool operator==(const card& other) const {
+    bool operator==(const card& other) const { //Makes cards comparable (I don't think this is ever used)
         return (cardName == other.cardName && cardValue == other.cardValue);
     }
 };
 
-std::vector<card> cards = {
+std::vector<card> cards = { //List of all the cards in a deck (no jokers)
 {"King of Spades", "King",10},
 {"King of Diamonds", "King",10},
 {"King of Clubs", "King",10},
@@ -88,22 +88,22 @@ std::vector<card> cards = {
 {"Ace of Spades", "Ace", FindAceValue()},
 };
 
-card GetCard(std::vector<card> &currentDeck) {
-    card currentCard = currentDeck[rand() % cards.size()];
+card GetCard(std::vector<card> &currentDeck) { //& is there to make this a reference
+    card currentCard = currentDeck[rand() % currentDeck.size()];
     currentDeck.erase(find(currentDeck.begin(), currentDeck.end(), currentCard));
-    std::cout << currentDeck.size();
     return currentCard; //NOLINT
 }
 
-std::vector<card> hand;
+std::vector<card> hand; //Need to make this a local variable
 
 void PrintHand() {
     for (const card& i : hand) {
-        std::cout << i.cardName << ", ";
+        std::cout << "| " << i.cardName << " |";
     }
+    std::cout << std::endl;
 }
 
-void DrawCard(std::vector<card> &currentDeck) {
+void DrawCard(std::vector<card> &currentDeck) { //See comment on GetCard() function
     hand.push_back(GetCard(currentDeck));
     // hand.push_back(GetCard(std::move(currentDeck))); ?????
 }
@@ -121,7 +121,7 @@ int main() {
                 DrawCard(deck);
             }
 
-            std::cout << deck.size();
+            PrintHand();
             std::cin.get();
         }
     }

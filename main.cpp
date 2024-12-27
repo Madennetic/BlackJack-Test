@@ -1,17 +1,15 @@
 #include <iostream>
 #include <vector>
 #include <random>
-#include <ctime>
 #include <algorithm>
+#include <stdlib.h>
 
-void mainMenu() {
+void MainMenu() {
     std::cout << "Welcome to the Casino!\n\n"
     << "We're currently just opening up so there is only one game available:\nBlack Jack!"
     << "\n\nEnter to continue\n";
     std::cin.get();
 }
-
-int handValue = 0;
 
 int aceSwitch = 0; //Will track if aces have been changed to 1
 
@@ -91,39 +89,83 @@ std::vector<card> cards = { //List of all the cards in a deck (no jokers)
 card GetCard(std::vector<card> &currentDeck) { //& is there to make this a reference
     card currentCard = currentDeck[rand() % currentDeck.size()];
     currentDeck.erase(find(currentDeck.begin(), currentDeck.end(), currentCard));
-    return currentCard; //NOLINT
+    return currentCard;
 }
 
-std::vector<card> hand; //Need to make this a local variable
-
-void PrintHand() {
+void PrintHand(const std::vector<card> &hand) {
     for (const card& i : hand) {
         std::cout << "| " << i.cardName << " |"; //want to intersperse cards with commas
     }
     std::cout << std::endl;
 }
 
-void DrawCard(std::vector<card> &currentDeck) { //See comment on GetCard() function
+void DrawCard(std::vector<card> &currentDeck, std::vector<card> &hand) { //See comment on GetCard() function
     hand.push_back(GetCard(currentDeck));
-    // hand.push_back(GetCard(std::move(currentDeck))); ?????
+}
+
+void FirstDraw(std::vector<card> &currentDeck, std::vector<card> &hand) {
+    // Draw
+}
+
+void PlaceBets(int &money) {
+    int bet = 0;
+    std::cout << "Money: " << money << std::endl << std::endl
+    << "Input your bet:" << std::endl;
+    std::cin >> bet;
+    while (std::cin.fail()) { //broken... helppppppppppppppppppppppppppppppppppppppppppp
+        std::cout << "Money: " << money << std::endl << std::endl
+        << "Please input a valid integer to bet:" << std::endl;
+        std::cin.clear();
+        std::cin.ignore(256);
+        std::cin >> bet;
+    }
+    money -= bet;
+    // Take in bet and remove it from money
+}
+
+void PlayHand(std::vector<card> &hand) {
+    // Player chooses how to play hand until they bust, draw, or surrender
+}
+
+void EndTurn() {
+    // Based on hands does things
+}
+
+void MainGame(int money = 500) { //series of functions repeating that represents each turn
+
+    int turnCounter = 0;
+    std::vector<card> deck = {};
+    while (money > 0) {
+        if (turnCounter % 2 == 0) {
+            deck = cards;
+        }
+        int handValue = 0;
+        std::vector<card> hand = {};
+        std::vector<card> dealerHand = {};
+        PlaceBets(money);
+        FirstDraw(deck, hand);
+        PlayHand(hand);
+        EndTurn();
+
+        turnCounter++;
+        //second deal function
+    }
 }
 
 int main() {
 
-    while (true) { // This will change into functions and only one while loop in here
-        mainMenu();
-        std::vector<card> deck = cards;
-        while (true) {
+    MainMenu();
+    MainGame();
 
-            srand(time(nullptr)); //NOLINT
-
-            for (int i = 0; i < 5; i++) {
-                DrawCard(deck);
-            }
-
-            PrintHand();
-            std::cin.get();
-        }
-    }
-    return 0;
 }
+
+/**
+ * Black Jack is played in a series of turns
+ * These turns consist of the following actions in the following sequence
+ * The player places a bet
+ * The player is dealt two cards
+ * The dealer is dealt one face up and one face down card.
+ * The player can stand, hit, double down, split, and surrender
+ * When the player is done the dealer shows their second card and hits until their hand is 17 or more
+ * Then, the win conditions are checked and the money distributed.
+**/

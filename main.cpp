@@ -103,31 +103,55 @@ void DrawCard(std::vector<card> &currentDeck, std::vector<card> &hand) { //See c
     hand.push_back(GetCard(currentDeck));
 }
 
-void FirstDraw(std::vector<card> &currentDeck, std::vector<card> &hand) {
+void FirstDraw(std::vector<card> &currentDeck, std::vector<card> &hand, std::vector<card> &dealerHand) {
     // Draw
 }
 
 void PlaceBets(int &money) {
+    std::cin.clear();
+    std::cin.ignore(256, '\n');
     int bet = 0;
     std::cout << "Money: " << money << std::endl << std::endl
     << "Input your bet:" << std::endl;
     std::cin >> bet;
-    while (std::cin.fail()) { //broken... helppppppppppppppppppppppppppppppppppppppppppp
+    while (std::cin.fail()) {
         std::cout << "Money: " << money << std::endl << std::endl
         << "Please input a valid integer to bet:" << std::endl;
         std::cin.clear();
-        std::cin.ignore(256);
+        std::cin.ignore(256, '\n');
         std::cin >> bet;
     }
     money -= bet;
     // Take in bet and remove it from money
 }
 
-void PlayHand(std::vector<card> &hand) {
+void PlayHand(std::vector<card> &deck, std::vector<card> &hand) {
     // Player chooses how to play hand until they bust, draw, or surrender
+    // Hit, Stand, Split, Surrender, Double Down
+
+    std::vector<std::string> actions = {"h", "s", "sp", "dd", "surrender"};
+    std::string action;
+    std::cin.clear();
+    std::cin.ignore(256, '\n');
+
+    std::cout << "Input your action: [h]it, [s]tand, [sp]lit, [dd]ouble draw, or [su]rrender" << std::endl;
+    std::cin >> action;
+    while (find(actions.begin(), actions.end(), action) == actions.end()) {
+        std::cin.clear();
+        std::cin.ignore(256, '\n');
+        std::cout << "Please input a valid action: [h]it, [s]tand, [sp]lit, [dd]ouble draw, or [su]rrender"
+        << std::endl;
+        std::cin >> action;
+    }
+
+    if (action == "h") {
+        DrawCard(deck, hand);
+        std::cout << "You drew the " << hand.back().cardName << std::endl;
+    }
+
 }
 
-void EndTurn() {
+void EndTurn(const std::vector<card> &hand, std::vector<card> &dealerHand) {
     // Based on hands does things
 }
 
@@ -143,9 +167,9 @@ void MainGame(int money = 500) { //series of functions repeating that represents
         std::vector<card> hand = {};
         std::vector<card> dealerHand = {};
         PlaceBets(money);
-        FirstDraw(deck, hand);
-        PlayHand(hand);
-        EndTurn();
+        FirstDraw(deck, hand, dealerHand);
+        PlayHand(deck, hand);
+        EndTurn(hand, dealerHand);
 
         turnCounter++;
         //second deal function

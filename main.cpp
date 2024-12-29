@@ -107,7 +107,11 @@ void FirstDraw(std::vector<card> &currentDeck, std::vector<card> &hand, std::vec
     // Draw
 }
 
-void PlaceBets(int &money) {
+void CheckBust() {
+    // Will check if hand value is over 21
+}
+
+int PlaceBets(int &money) {
     std::cin.clear();
     std::cin.ignore(256, '\n');
     int bet = 0;
@@ -122,33 +126,66 @@ void PlaceBets(int &money) {
         std::cin >> bet;
     }
     money -= bet;
+
+    return bet;
     // Take in bet and remove it from money
 }
 
-void PlayHand(std::vector<card> &deck, std::vector<card> &hand) {
+void PlayHand(std::vector<card> &deck, std::vector<card> &hand, int &money, int bet) {
     // Player chooses how to play hand until they bust, draw, or surrender
     // Hit, Stand, Split, Surrender, Double Down
 
-    std::vector<std::string> actions = {"h", "s", "sp", "dd", "surrender"};
-    std::string action;
-    std::cin.clear();
-    std::cin.ignore(256, '\n');
+    // to make this dynamic i will append and use the function in testing.cpp
 
-    std::cout << "Input your action: [h]it, [s]tand, [sp]lit, [dd]ouble draw, or [su]rrender" << std::endl;
-    std::cin >> action;
-    while (find(actions.begin(), actions.end(), action) == actions.end()) {
+    const std::vector<std::string> withSplit = {"h", "s", "sp", "dd", "su"};
+    const std::vector<std::string> withoutSplit = {"h", "s", "dd", "su"};
+    const std::string optionsSplit = "[h]it, [s]tand, [sp]lit, [dd]ouble down, or [su]rrender";
+    const std::string optionsNoSplit = "[h]it, [s]tand, [dd]ouble down, or [su]rrender";
+    std::vector<std::string> actions;
+    std::string options;
+
+    if (hand[0].cardValue == hand[1].cardValue) {
+        actions = withSplit;
+        options = optionsSplit;
+    }
+    else {
+        actions = withoutSplit;
+        options = optionsNoSplit;
+    }
+
+    std::string action;
+
+    while (true) {
+        CheckBust();
         std::cin.clear();
         std::cin.ignore(256, '\n');
-        std::cout << "Please input a valid action: [h]it, [s]tand, [sp]lit, [dd]ouble draw, or [su]rrender"
-        << std::endl;
+
+        std::cout << "Input your action: " << options << std::endl;
         std::cin >> action;
-    }
+        while (find(actions.begin(), actions.end(), action) == actions.end()) {
+            std::cin.clear();
+            std::cin.ignore(256, '\n');
+            std::cout << "Please input a valid action: " << options << std::endl;
+            std::cin >> action;
+        }
 
-    if (action == "h") {
-        DrawCard(deck, hand);
-        std::cout << "You drew the " << hand.back().cardName << std::endl;
-    }
+        if (action == "h") {
+            DrawCard(deck, hand);
+            std::cout << "You drew the " << hand.back().cardName << std::endl;
+        }
 
+        else if (action == "s") {
+            std::cout << "You stood" << std::endl;
+        }
+
+        else if (action == "sp") {
+            std::cout << "work?";
+        }
+
+        else if (action == "dd") {
+            // balls
+        }
+    }
 }
 
 void EndTurn(const std::vector<card> &hand, std::vector<card> &dealerHand) {
@@ -166,9 +203,9 @@ void MainGame(int money = 500) { //series of functions repeating that represents
         int handValue = 0;
         std::vector<card> hand = {};
         std::vector<card> dealerHand = {};
-        PlaceBets(money);
+        const int bet = PlaceBets(money);
         FirstDraw(deck, hand, dealerHand);
-        PlayHand(deck, hand);
+        PlayHand(deck, hand, money, bet);
         EndTurn(hand, dealerHand);
 
         turnCounter++;

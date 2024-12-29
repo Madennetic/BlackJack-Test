@@ -2,8 +2,18 @@
 #include <vector>
 
 
-std::vector<int> banana = {10,20,30,40,50,60,70};
+std::vector<std::string> banana = {"10","hello", "Sarish", "Maden"};
 
 int main() {
-    std::cout << banana.back();
+    std::string apple;
+    for (int i = 0; i < banana.size(); i++) {
+        if (i == banana.size() - 1) {
+            apple += "or " + banana[i];
+            break;
+        }
+        apple += banana[i] + ", ";
+    }
+    std::cout << apple << std::endl;
 }
+
+// Loop through and put commas between, until the last one where you put a comma and an or.
